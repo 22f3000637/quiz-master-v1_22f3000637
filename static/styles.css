@@ -16,7 +16,7 @@
     --text-color :#c5c6c7;
     --light-shade :#1f2833;
     --dark-shade :#181818;
-    --background:linear-gradient(#0b0c10,#1f2833,#0b0c10) ;
+    --background:linear-gradient(#0b0c10,#1f2833,#0b0c10);
 }
 body{
     overflow-x: hidden;
@@ -25,30 +25,27 @@ body{
     background:var(--background);
     background-repeat: no-repeat;
     background-size: cover;
-    background-attachment: fixed;
+    background-attachment: fixed;    
     display: flex;
     justify-content: center;
     align-items: center;
     color: var(--text-color);
 }
-.button,
-button{
+.button{
     border:2px solid var(--accent-color);
     cursor: pointer;
-    box-shadow: 0 8px 1px var(--box-shadow);
+    box-shadow: 0 6px 1px var(--box-shadow);
     transition: 250ms ease;
     border-radius: 5px;
     background-color: var(--accent-color);
     color: var(--dark-shade);
     font-size: 0.9em;
 }
-.button:hover,:focus-visible,
-button:hover,:focus-visible{
-    background: transparent;
+.button:hover{
     color: var(--accent-color);
+    background-color: transparent;
 }
-.button:active,
-button:active{
+.button:is(:focus-visible,:active){
     transform: translateY(8px);
     box-shadow: none;
 }
@@ -68,7 +65,7 @@ a:hover,:focus-visible{
 .new-chapter-form,
 .new-subject-form,
 .new-quiz-form{
-    box-shadow:0px 0px 3em var(--box-shadow);
+    box-shadow:0px 0px 2em var(--box-shadow);
     background:var(--background);
     padding:2em;
     border: 5px solid var(--accent-color);
@@ -94,6 +91,7 @@ a:hover,:focus-visible{
             flex-grow: 1;
         }
         .button{
+            border:2px solid var(--accent-color);
             background-color: var(--accent-color);
             color: var(--dark-shade);
             text-align: center;
@@ -101,6 +99,15 @@ a:hover,:focus-visible{
             margin-top: 1.5em;
             flex-grow: 1;
         }
+        .button:hover{
+            color: var(--accent-color);
+            background-color: transparent;
+        }
+        .button:is(:focus, :active){
+            transform: translateY(8px);
+            box-shadow: none;
+        }
+        
     }
     input,textarea{
         font-size: 1rem;
@@ -176,15 +183,16 @@ a:hover,:focus-visible{
     .course-list,.quiz-list{
         position: absolute;
         top: 20%;
-        width: fit-content;
+        width: 100%;
+        min-height: 100%;
         display: flex;
         justify-content: center;
-        row-gap: 2.5em;
+        row-gap: 2em;
         column-gap: 1em;
         flex-wrap: wrap;
         padding-bottom: 2em;
         table{
-            width: 500px;
+            flex: 0 0 430px;
             background: var(--background);
             text-align: center;
             border-collapse: collapse;
@@ -196,8 +204,8 @@ a:hover,:focus-visible{
                 padding: 0.6em;
             }
             tbody{
-                tr td{
-                    padding: 0.5em;
+                td{
+                    padding: 0.3em;
                 }
                 td a{
                     color: var(--text-color);
@@ -208,10 +216,9 @@ a:hover,:focus-visible{
             }
             .button{
                 display: block;
-                margin-block: 0.5em;
-                box-shadow: 0 4px 1px var(--accent-color);
+                box-shadow: 0 4px 1px var(--box-shadow);
                 color: var(--dark-shade);
-                padding: 0.5em;
+                margin: 0.5em;
             }
             .button:hover,:focus-visible{
                 color: var(--accent-color);
@@ -236,14 +243,13 @@ a:hover,:focus-visible{
         place-items: center;
         background: var(--accent-color);
         a{
+            margin:0;
             color: var(--dark-shade);
         }
     }
     .new-subject-icon{
         width: 60px;
         height: 60px;
-        padding: 1em;
-        padding-bottom: 1.5em;
         border-radius: 50%;
         a{
             scale: 2;
@@ -289,3 +295,36 @@ a:hover,:focus-visible{
         }
     }
 }
+
+.flash {
+    min-width: fit-content;
+    width:280px;
+    position: fixed;
+    top: 0.8em;
+    font-style: italic;
+    padding: 10px 20px;
+    animation: fadeout 6s ease forwards;
+    color: #FFFFFF;
+
+    &.success {
+       background: #388E3C;
+    }
+    &.warning {
+        background:#FF9800;
+    }    
+    &.error {
+        background:#FF4C4C;
+    }
+    
+}
+@keyframes fadeout {
+    0%,30%{
+       right: 1em;
+       opacity: 1;
+    }
+    100%{
+        opacity: 0;
+        right: -30%
+    }   
+}
+

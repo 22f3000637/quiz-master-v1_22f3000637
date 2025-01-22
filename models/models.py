@@ -1,23 +1,21 @@
-from models import db, app
-from datetime import date
-from werkzeug.security import generate_password_hash, check_password_hash
+from . import db, generate_password_hash, check_password_hash
 
 
 class User(db.Model):
   id = db.Column(db.Integer, primary_key=True, nullable=False)
   email = db.Column(db.String(50), unique=True, nullable=False)
-  hashed_password = db.Column(db.String(12), nullable=False)
+  hashed_password = db.Column(db.String(), nullable=False)
   fullname = db.Column(db.String(50), nullable=False)
   dob = db.Column(db.Date(), nullable = False)
   qualification = db.Column(db.String(50), nullable=False)
   is_admin = db.Column(db.Boolean, default=False)
 
-  def hashing_password(self, password):
+  def hashing_password(password):
     hash_password = generate_password_hash(password)
     return hash_password
 
-  def check_password(self, password):
-    return self.hashed_password == check_password_hash(self.hashed_password, password)
+  def check_password(self, plain_password):
+    return check_password_hash(self.hashed_password, plain_password)
 
 class Subject(db.Model):
   id = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -62,26 +60,4 @@ class Scores(db.Model):
   total_scored = db.Column(db.Integer, nullable=False)
   
 
-with app.app_context():
-  db.create_all()
-  user = User.query.filter_by(email = ('Admin@gmail.com' or 'Quizmaster@gmail.com')).all()
-  if not user:
-    user1 = User(
-      email='Admin@gmail.com',
-      hashed_password = generate_password_hash('Admin'),
-      dob = date(2001,11,16),
-      fullname='Admin',
-      qualification='Diploma',
-      is_admin=True
-    )
-    user2 = User(
-      email='QuizMaster@gmail.com',
-      hashed_password = generate_password_hash('Quizmaster'),
-      dob = date(2001,11,16),
-      fullname='Quizmaster',
-      qualification='Diploma',
-      is_admin=True
-    )
-    db.session.add(user1)
-    db.session.add(user2)
-    db.session.commit()
+
