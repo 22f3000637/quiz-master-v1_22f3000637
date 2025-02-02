@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}
+   Admin Dashboard 
+{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <nav>    
+        <div class="navigation">
+            <ul>
+                <li><a target="_blank" href="#">Home</a></li>
+                <li><a target="_blank" href="#">Quiz</a></li>
+                <li><a target="_blank" href="#">Summary</a></li>
+                <li><a target="_blank" href="{{ url_for('login' ) }}">Logout</a></li>
+            </ul>
+        </div>
+        {% include 'flash.html'   %}
+        <div class="search-greeting">
+            <input type="text" placeholder="Search">
+            <h2>Welcome {{name}}</h2>
+        </div>
+    </nav>
+    <div class="course-list">
+    {% for subject in subjects %}
+        <table class="course">
+            <thead>
+                <tr>
+                    <th colspan="3">{{subject.name}}</th>
+                </tr>
+                <tr>
+                    <th>Chapter Name</th>
+                    <th>Number of <br>Questions</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if subject.chapters %}
+                {% for chapter in subject.chapters %}
+                <tr>
+                    <td>{{chapter.name}}</td>
+                    <td>xxxxxx</td>
+                    <td><a href="#" class="edit">Edit</a>/<a href="#" class='edit'>Delete</a></td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr>
+                    <td colspan="3" style="border-bottom: 1px solid var(--accent-color); padding: 0.8em;">No Chapters Added</td>
+                </tr>
+                {% endif %}
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td><a class="button" href="/Admin/New-Chapter.html" target="_blank">+ Chapter</a></td>
+                </tr>
+            </tbody>
+        </table>
+        {% endfor %}
+    </div>
+    <div class="new-subject-icon">
+        <a href="New-Subject.html" target="_blank">+</a>
+    </div>
+</div>
+{% endblock %}
