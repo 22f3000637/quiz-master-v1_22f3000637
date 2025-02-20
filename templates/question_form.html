@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Question Form
+{% endblock %}
+
+
+{% block content %}
+    {% include 'flash.html'   %}
+    {% if question %}
+    <div class="new-question-form" style="margin-top:20%;width: 50%;">
+        <div class="heading">
+            <h2>Update Question</h2>
+        </div>
+
+        <form action="/update_question/{{question.id}}" method="post" style="justify-self: center;">
+            <div class="input-field"><label for="q-title">Question Title: </label><input type="text" name="q-title" 
+                value="{{question.question_title}}"></div>
+            <div class="input-field"><label for="question">Question : </label><textarea id="question" name="question" type="text" required>{{question.question}}</textarea></div>
+            <div class="input-field"><label for="option_1">Option 1 : </label><input id="option_1" name="option_1" type="text" 
+                value="{{question.option_1}}"></div>
+            <div class="input-field"><label for="option_2">Option 2 : </label><input id="option_2" name="option_2" type="text" 
+                value="{{question.option_2}}"></div>
+            <div class="input-field"><label for="option_3">Option 3 : </label><input id="option_3" name="option_3" type="text" 
+                value="{{question.option_3}}"></div>
+            <div class="input-field"><label for="option_4">Option 4 : </label><input id="option_4" name="option_4" type="text" 
+                value="{{question.option_4}}"></div>
+            <div class="input-field"><label for="correct_answer">Correct Answer : </label><input id="correct_answer" name="correct_answer" type="text" value="{{question.correct_answer}}" required></div>
+            <div class="input-field"><label for="marks">Marks : </label><input id="marks" name="marks" type="number" value="{{question.marks}}" required></div>
+            <div class="input-field"><button type="submit" class="button">Update</button>
+            <a class="button" href="{{ url_for('quiz_dashboard' ) }}">Cancel</a>
+            </div>
+        </form>
+    </div>
+    {% else %}
+    <div class="new-question-form" style="margin-top:20%;width: 50%;">
+        <div class="heading">
+            <h2>New Question</h2>
+        </div>
+
+        <form action="/new_question" method="post" style="justify-self: center;">
+            <div class="input-field"><label for="chapter">Chapter : </label>
+            <select  name="chapter_id" id="chapter_id">
+                {% for chapter in chapters %}
+                    <option value="{{chapter.id}}">{{chapter.name | title}}</option>
+                {% endfor %}
+            </select>
+            </div>
+            <div class="input-field"><label for="q-title">Question Title: </label><input type="text" name="q-title"></div>
+            <div class="input-field"><label for="question">Question : </label><textarea id="question" name="question" type="text" required></textarea></div>
+            <div class="input-field"><label for="option_1">Option 1 : </label><input id="option_1" name="option_1" type="text" required></div>
+            <div class="input-field"><label for="option_2">Option 2 : </label><input id="option_2" name="option_2" type="text" required></div>
+            <div class="input-field"><label for="option_3">Option 3 : </label><input id="option_3" name="option_3" type="text" required></div>
+            <div class="input-field"><label for="option_4">Option 4 : </label><input id="option_4" name="option_4" type="text" required></div>
+            <div class="input-field"><label for="correct_answer">Correct Answer : </label><input id="correct_answer" name="correct_answer" type="text" required></div>
+            <div class="input-field"><label for="marks">Marks : </label><input id="marks" name="marks" type="number" required></div>
+            <div class="input-field"><button type="submit" class="button">Save</button>
+            <a class="button" href="{{ url_for('quiz_dashboard' ) }}">Cancel</a>
+            </div>
+        </form>
+    </div>
+    {% endif %}
+        
+
+
+
+
+{% endblock %}

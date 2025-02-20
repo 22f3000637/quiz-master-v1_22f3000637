@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    Subject form
+{% endblock %}
+
+{% block content %}
+
+{% include 'flash.html' %}
+    {% if subject %}
+        <div class="new-subject-form">
+            <div class="heading">
+                <h2>Update Subject</h2>
+            </div>
+            <form action="/update_subject/{{subject.id}}" method="post">
+                <div class="input-field"><label for="subject-name">Name : </label><input id="subject-name" name="subject-name" type="text" value="{{subject.name}}" required></div>
+                <div class="input-field"><label for="subject-desc">Description : </label><textarea id="subject-desc" name="subject-desc" required> {{subject.description}}</textarea></div>
+                <div class="input-field"><button type="submit" class="button">Update</button>
+                    <button class="button"><a href="{{ url_for('admin_dashboard' ) }}">Cancel</a></button></div>
+            </form>
+        </div>  
+    {% else %}
+        <div class="new-subject-form">
+            <div class="heading">
+                <h2>New Subject</h2>
+            </div>
+            <form action="/new_subject" method="post">
+                <div class="input-field"><label for="subject-name">Name : </label><input id="subject-name" name="subject-name" type="text" required></div>
+                <div class="input-field"><label for="subject-desc">Description : </label><textarea id="subject-desc" name="subject-desc" type="text" required></textarea></div>
+                <div class="input-field"><button type="submit" class="button">Save</button>
+                    <button class="button"><a href="{{ url_for('admin_dashboard' ) }}">Cancel</a></button></div>
+
+            </form>
+        </div>
+            
+    {% endif %}
+
+{% endblock %}

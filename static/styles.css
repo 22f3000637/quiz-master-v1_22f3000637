@@ -13,7 +13,7 @@
 :root{
     --accent-color:#66fcf1;
     --box-shadow :#45a29e;
-    --text-color :#c5c6c7;
+    --text-color :whitesmoke;/*#c5c6c7;*/
     --light-shade :#1f2833;
     --dark-shade :#181818;
     --background:linear-gradient(#0b0c10,#1f2833,#0b0c10);
@@ -64,6 +64,7 @@ a:hover,:focus-visible{
 .login-form,
 .new-chapter-form,
 .new-subject-form,
+.new-question-form,
 .new-quiz-form{
     box-shadow:0px 0px 2em var(--box-shadow);
     background:var(--background);
@@ -125,7 +126,7 @@ a:hover,:focus-visible{
 }
 
 /* Admin-Dashboard and Quiz Management*/
-.admin-container, .quiz-container{
+.admin-container, .question-container{
     display: grid;
     place-items: center;
     nav{
@@ -137,7 +138,7 @@ a:hover,:focus-visible{
         left: 0;
         width: 100%;
         background-color: var(--light-shade);
-
+        font-weight: 700;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -180,11 +181,11 @@ a:hover,:focus-visible{
             }
         }
     }
-    .course-list,.quiz-list{
+    .course-list, .quiz-list{
         position: absolute;
         top: 20%;
+        left: 0;
         width: 100%;
-        min-height: 100%;
         display: flex;
         justify-content: center;
         row-gap: 2em;
@@ -219,6 +220,7 @@ a:hover,:focus-visible{
                 box-shadow: 0 4px 1px var(--box-shadow);
                 color: var(--dark-shade);
                 margin: 0.5em;
+                font-weight: 600;
             }
             .button:hover,:focus-visible{
                 color: var(--accent-color);
@@ -235,30 +237,14 @@ a:hover,:focus-visible{
             border-left: 2px solid var(--box-shadow);
         }
     }
-    .new-subject-icon,.new-quiz-icon{
+    .new-subject-icon,.new-question-icon{
         position: fixed;
         bottom: 5%;
         right: 2%;
         display: grid;
         place-items: center;
-        background: var(--accent-color);
-        a{
-            margin:0;
-            color: var(--dark-shade);
-        }
-    }
-    .new-subject-icon{
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        a{
-            scale: 2;
-        }
-    }
-    .new-quiz-icon{
-        a{
-            padding: 0.8em;
-        }
+        font-size: large;
+        font-weight: 600;
     }
 }
 
@@ -282,19 +268,9 @@ a:hover,:focus-visible{
             padding: 1em 4em;
         }
     }
+    
 }
 
-/* New Quiz */
-.new-quiz-form{
-    .input-field:nth-child(4){
-        margin: 2em;
-        justify-content: space-evenly;
-        >*{
-            margin: 0;
-            padding: 1em 4em;
-        }
-    }
-}
 
 .flash {
     min-width: fit-content;
@@ -328,3 +304,59 @@ a:hover,:focus-visible{
     }   
 }
 
+.update-chapter {
+    width:1250px;
+
+    margin-block: 10px;
+    box-shadow:0px 0px 2em var(--box-shadow);
+    background:var(--background);
+    padding:1em;
+    border: 5px solid var(--accent-color);
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    form{
+        width:1250px;
+        display: grid;
+        input{
+            width: 50%;
+            display: block;
+            flex-grow: 1;
+            font-size: 1.5rem;
+            background: transparent;
+            color: var(--accent-color);
+            border: none;
+        }
+        
+    }
+    .button {
+        font-size: large;
+        background-color: var(--accent-color);
+        width:90px;
+        margin: 0;
+        justify-self: flex-end;
+        color: var(--dark-shade);
+        &:hover{
+            background-color: var(--dark-shade);
+            color: var(--accent-color);
+        }
+    }
+}
+
+button  a{
+    color: #0b0c10;
+}
+
+
+select {
+    width: 280px;
+    background-color: transparent;
+    color: aquamarine;
+    font-size: large;
+    text-align: center; border: none; border-bottom:2px aqua solid ;
+    
+    option {
+        background-color: var(--light-shade);
+    }
+}

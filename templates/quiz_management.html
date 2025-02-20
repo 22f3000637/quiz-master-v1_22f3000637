@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    Quiz Dashboard    
+{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <nav>    
+        <div class="navigation">
+            <ul>
+                <li><a  href="{{ url_for('admin_dashboard' ) }}">Home</a></li>
+                <li><a  href="#" >Quiz</a></li>
+                <li><a  href="#">Summary</a></li>
+                <li><a  href="{{ url_for('login' ) }}">Logout</a></li>
+            </ul>
+        </div>
+        {% include 'flash.html' %}
+        <div class="search-greeting">
+            <input type="text" placeholder="Search">
+            <h2>Welcome {{name}}</h2>
+        </div>
+    </nav>
+        <div class="quiz-list">
+            {% set quiz_count = namespace(value=0) %}
+            {% for quiz in quizes %}
+            <table>
+                {% for chapter in chapters %}
+                {% if quiz.chapter_id == chapter.id %}
+                {% set quiz_count.value = quiz_count.value + 1 %}
+                <thead>
+                    <tr>
+                        <th colspan="3">
+                            Quiz{{quiz_count.value}}({{chapter.name | title}})
+                            <a href="/update_quiz/{{quiz.id}}" class="button" style="display: inline-block; padding: 6px 5px 3px 5px; background: transparent; ">
+                                ✒️
+                            </a>
+                            <a href="/delete_quiz/{{quiz.id}}" class="button" style="display: inline-block; background:transparent; padding: 2px;">
+                                <img style="background: transparent; height: 22px; padding: 0; width: 30px;"
+                                    src="../static/delete_32dp_75FBFD_FILL0_wght400_GRAD0_opsz40.png" alt="delete" >
+                            </a>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>ID</th>
+                        <th>Question Title</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if chapter.questions %}
+                    {% for question in chapter.questions %}
+                    <tr>
+                        <td>{{question.id}}</td>
+                        <td>{{question.question_title | title}}</td>
+                        <td> <a href="/update_question/{{question.id}}">Edit</a> / <a href="/delete_question/{{question.id}}">Delete</a></td>
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    <tr><td colspan="3" style="padding: 10px; border-bottom:2px solid var(--accent-color) ;">No questions added</td></tr>
+                    {% endif %}
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td><a href="{{ url_for('new_question' ) }}" class="button">+ Question</a></td>
+                    </tr>
+                </tbody>
+                {% endif %}
+                {% endfor %}
+            </table>
+            {% endfor %}
+        </div>
+        <div class="new-subject-icon">
+            <a href="{{url_for('new_quiz')}}" class="button">+Quiz</a>
+        </div>
+</div>
+{% endblock %}

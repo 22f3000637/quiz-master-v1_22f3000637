@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    Quiz Form
+{% endblock %}
+
+{% block content %}
+
+    {% include 'flash.html' %}
+    {% if quiz %}
+    <div class="new-quiz-form">
+        <div class="heading">
+            <h2>Update Quiz</h2>
+        </div>
+        <form action="/update_quiz//{{quiz.id}}" method="post">
+            <div class="input-field"><label for="date">Date : </label><input id="date" name="date" type="date" value="{{quiz.date}}" required style="text-align: center;"></div>
+            <div class="input-field"><label for="duration">Duration : </label>
+                <select name="duration">
+                    <option value="30">30 mins</option>
+                    <option value="60">1 hour</option>
+                    <option value="90">1 hour 30 mins</option>
+                    <option value="120">2 hour</option>
+                    <option value="150">2 hour 30 mins</option>
+                </select>
+            </div>
+            <div class="input-field"><input type="submit" class="button" value="Save" style="width:33%;">
+                <button class="button"><a href="{{ url_for('quiz_dashboard' ) }}">Cancel</a></button></div>
+        </form>
+    </div>
+    {% else %}
+    <div class="new-quiz-form">
+        <div class="heading">
+            <h2>New Quiz</h2>
+        </div>
+        <form action="/new_quiz" method="post">
+            <div class="input-field"><label for="chapter">Chapter : </label>
+                <select  name="chapter_id" id="chapter_id" >
+                    {% for chapter in chapters %}
+                        <option value="{{chapter.id}}">{{chapter.name | title}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="input-field"><label for="date">Date : </label><input id="date" name="date" type="date" required style="text-align: center;"></div>
+            <div class="input-field"><label for="duration">Duration : </label>
+                <select name="duration">
+                    <option value="30">30 mins</option>
+                    <option value="60">1 hour</option>
+                    <option value="90">1 hour 30 mins</option>
+                    <option value="120">2 hour</option>
+                    <option value="150">2 hour 30 mins</option>
+                </select>
+            </div>
+            <div class="input-field"><input type="submit" class="button" value="Save" style="width:33%;">
+                <button class="button"><a href="{{ url_for('quiz_dashboard' ) }}">Cancel</a></button></div>
+        </form>
+    </div>
+    {% endif %}
+    
+    
+{% endblock %}
