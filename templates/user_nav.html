@@ -1,0 +1,22 @@
+<nav>
+    <div class="navigation">
+        <ul>
+            <li><a  href="{{ url_for('user_dashboard' ) }}">Home</a></li>
+            <li><a  href="{{ url_for('scores' ) }}">Scores</a></li>
+            <li><a  href="{{ url_for('user_summary' ) }}">Summary</a></li>
+            <li><a  href="{{ url_for('logout') }}">Logout</a></li>
+        </ul>
+    </div>
+    <div class="search-greeting">
+        <form method="get" action="/searched">
+            <select name="category" style="width: 100px;margin-right:3px ;font-size: 1em;
+            border: 2px solid var(--box-shadow); height: 35px; border-radius: 8px;">
+            <option value="Subject">Subject</option>
+            <option value="User">User</option>
+            <option value="Quiz">Quiz</option></select>
+            <input type="text" name="query" placeholder="Search" style="padding: 3px; font-size: large;">
+        </form>
+        <h2>Welcome {{name}}</h2>
+    </div>
+    
+</nav>

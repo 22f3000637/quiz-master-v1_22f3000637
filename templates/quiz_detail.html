@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Quiz Detail
+{% endblock %}
+
+{% block content %}
+    <div class="quiz-detail">
+        <div><label>ID:</label> <p>{{quiz.id}}</p></div>
+        <div><label>Subject:</label> <p>{{quiz.chapter.subject.name}}</p></div>
+        <div><label>Chapter:</label> <p>{{quiz.chapter.name}}</p></div>
+        <div><label>Number of Questions:</label> <p>{{quiz.questions|length}}</p></div>
+        <div><label>Scheduled Date:</label> <p>{{quiz.date_of_quiz.strftime("%d/%m/%Y")}}</p></div>
+        <div><label>Duration (HH:MM):</label> <p>{{"%02d:%02d" | format(quiz.time_duration // 60, quiz.time_duration % 60)}}</p></div>
+        <a class="button" href="{{ url_for('user_dashboard' ) }}">Close</a>
+    </div>
+{% endblock %}

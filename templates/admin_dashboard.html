@@ -6,22 +6,8 @@
 
 {% block content %}
 <div class="admin-container">
-    <nav>    
-        <div class="navigation">
-            <ul>
-                <li><a  href="{{ url_for('admin_dashboard' ) }}">Home</a></li>
-                <li><a  href="{{ url_for('quiz_dashboard' ) }}">Quiz</a></li>
-                <li><a  href="#">Summary</a></li>
-                <li><a  href="{{ url_for('login' ) }}">Logout</a></li>
-            </ul>
-        </div>
-        {% include 'flash.html' %}
-        <div class="search-greeting">
-            <input type="text" placeholder="Search">
-            <h2>Welcome {{name}}</h2>
-        </div>
-        
-    </nav>
+    {% include 'admin_nav.html'   %}
+    {% include 'flash.html' %}
     
     <div class="course-list">
     {% for subject in subjects %}
@@ -60,7 +46,7 @@
                     </tr>
                 {% else %}
                 <tr>
-                    <td colspan="3" style="border-bottom: 1px solid var(--accent-color); padding: 0.8em;">No Chapters Added</td>
+                    <td colspan="3" style="border-bottom: 2px solid var(--box-shadow); padding: 0.8em;">No Chapters Added</td>
                 </tr>
                 <tr>
                     <td> </td>

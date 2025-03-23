@@ -5,9 +5,48 @@
     User Dashboard
 {% endblock %}
 
-{% include 'flash.html'   %}
+
 
 {% block content %}
-    Welcome {{name}}
-    <button><a href="{{url_for('logout')}}">Logout</a></button>
+
+{% include 'flash.html' %}
+<div class="admin-container">
+    {% include 'user_nav.html'   %}
+    <div class="quiz-list">
+        <table style="min-width: 1000px; margin: auto;">
+            <thead>
+                <tr>
+                    <th colspan="5"><h2>Upcoming Quizzes</h2></th>
+                </tr>
+                <tr>
+                    <th>Id</th>
+                    <th>No.of Questions</th>
+                    <th>Date</th>
+                    <th>Duration (HH:MM)</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for quiz in quizes %}
+                <tr >
+                    <td>{{quiz.id}}</td>
+                    <td>{{quiz.questions | length}}</td>
+                    <td style=" border-right: 2px solid var(--box-shadow);">{{ quiz.date_of_quiz.strftime("%d/%m/%Y") }}</td>
+                    <td style=" border-right: 2px solid var(--box-shadow);">
+                        {{"%02d:%02d" | format(quiz.time_duration // 60, quiz.time_duration % 60)}}</td>
+                    {% if quiz.date_of_quiz <= current_date %}
+                    <td>
+                        <a href="/quiz_detail/{{quiz.id}}" class="button" style="display: inline; padding: 2px 8px;">View</a>
+                        <a class="button green" href="{{ url_for('start_quiz', quiz_id = quiz.id ) }}" style="display: inline;padding: 2px 8px;" >Start</a>
+                    </td>
+                    {% else %}
+                        <td>Expired</td>
+                    {% endif %}
+                    
+                </tr>
+                {% endfor %}
+               
+            </tbody>
+        </table>
+    </div>
 {% endblock %}

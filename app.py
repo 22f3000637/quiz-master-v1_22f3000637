@@ -10,9 +10,11 @@ app.config["SECRET_KEY"] = '81c34f7f2dcef68de4bc0c365df13f9f'
 from models import db, User, generate_password_hash
 db.init_app(app)
 
-from controllers import routes
+
 
 with app.app_context():
+  from controllers import routes
+
   db.create_all()
   user = User.query.filter_by(is_admin = True).all()
   if not user:
@@ -35,6 +37,8 @@ with app.app_context():
     db.session.add(user1)
     db.session.add(user2)
     db.session.commit()
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

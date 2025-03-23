@@ -7,21 +7,8 @@
 
 {% block content %}
 <div class="admin-container">
-    <nav>    
-        <div class="navigation">
-            <ul>
-                <li><a  href="{{ url_for('admin_dashboard' ) }}">Home</a></li>
-                <li><a  href="#" >Quiz</a></li>
-                <li><a  href="#">Summary</a></li>
-                <li><a  href="{{ url_for('login' ) }}">Logout</a></li>
-            </ul>
-        </div>
-        {% include 'flash.html' %}
-        <div class="search-greeting">
-            <input type="text" placeholder="Search">
-            <h2>Welcome {{name}}</h2>
-        </div>
-    </nav>
+    {% include 'admin_nav.html'   %}
+    {% include 'flash.html'   %}
         <div class="quiz-list">
             {% set quiz_count = namespace(value=0) %}
             {% for quiz in quizes %}
@@ -50,20 +37,20 @@
                 </thead>
                 <tbody>
                     {% if chapter.questions %}
-                    {% for question in chapter.questions %}
-                    <tr>
-                        <td>{{question.id}}</td>
-                        <td>{{question.question_title | title}}</td>
-                        <td> <a href="/update_question/{{question.id}}">Edit</a> / <a href="/delete_question/{{question.id}}">Delete</a></td>
-                    </tr>
-                    {% endfor %}
+                        {% for question in chapter.questions %}
+                        <tr>
+                            <td>{{loop.index    }}</td>
+                            <td>{{question.question_title | title}}</td>
+                            <td> <a href="/update_question/{{question.id}}">Edit</a> / <a href="/delete_question/{{question.id}}">Delete</a></td>
+                        </tr>
+                        {% endfor %}
                     {% else %}
                     <tr><td colspan="3" style="padding: 10px; border-bottom:2px solid var(--accent-color) ;">No questions added</td></tr>
                     {% endif %}
                     <tr>
                         <td></td>
                         <td></td>
-                        <td><a href="{{ url_for('new_question' ) }}" class="button">+ Question</a></td>
+                        <td><a href="/new_question/{{quiz.id}}/{{chapter.id}}" class="button">+ Question</a></td>
                     </tr>
                 </tbody>
                 {% endif %}

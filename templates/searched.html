@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Search
+{% endblock %}
+
+{% block content %}
+    {% include 'flash.html'   %}
+    {% if admin %}
+        {% include 'admin_nav.html'   %}
+        {% if category == "Subject" %}
+            {% if results %}
+                {% for res in results %}
+                {{res.name}}
+                {{res.description}}
+                <button>View</button>
+                {% endfor %}
+            {% else %}
+                <h1>No results found</h1>
+            {% endif %}
+            
+        {% elif category == "Quiz" %} <!--Quizzes-->
+            {% for res in results %}
+                    {{res.name}}<br>
+                {% if res.quizes %}
+                    {% for quiz in res.quizes %}
+                    {{quiz.date_of_quiz}}<br>
+                    {{quiz.time_duration}} minutes<br>
+                        {% if quiz.questions %}
+                            {% for ques in quiz.questions %}
+                                {{ques.question}}
+                                {{ques.correct_answer}}
+                                {{ques.marks}}<br>
+                            {% endfor %}
+                        {% else %}
+                            <h1>No questions Added</h1>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <h1>No quizes found</h1>
+                {% endif %}
+            {% endfor %}
+
+        {% else %}
+            {% if category == "User" %}
+                {% if results %}
+                    <table>
+                            <tr>
+                                <th>S.no</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Qualification</th>
+                                <th>Dob</th>
+                                <th>Actions</th>
+                            </tr>
+                        {% for user in results %}
+                        <tr>
+                            <td>{{loop.index}}</td>
+                            <td>{{user.fullname}}</td>
+                            <td>{{user.email}}</td>
+                            <td>{{user.qualification}}</td>
+                            <td>{{user.dob}}</td>
+                            <td>
+                                <a href="" class="button">Edit</a><a href="" class="button">Delete</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <h1>No Users found</h1>
+                {% endif %}
+            {% endif %}
+        {% endif %}
+        <a href="{{ url_for('admin_dashboard' ) }}" class="button">Home</a>
+    {% else %}<!--User else-->
+        {% include 'user_nav.html'   %}
+
+
+
+    {% endif %}
+    
+{% endblock %}

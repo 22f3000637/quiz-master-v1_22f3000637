@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Quiz result
+{% endblock %}
+
+{% block content %}
+{% include 'user_nav.html'   %}
+{% include 'flash.html'   %}
+    
+    <div class="result-container">
+    <div class="result-head">
+        <h1>🎉🎉Dear {{user}}, You have scored {{score.total_scored or 0}} out of {{total}}</h1>
+    </div>
+    <div class="result">
+        <table >
+            <thead>
+                <tr>
+                    <th>S.no</th>
+                    <th>Question</th>
+                    <th>Correct answer</th>
+                    <th>Selected answer</th>
+                    <th>Marks</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for result in results %}
+                    {% if result.user_answer == result.correct_answer  %}
+                    <tr class="green"><td>{{loop.index}}</td>
+                        <td class="ques">{{result.question}}</td>
+                        <td>{{result.user_answer}}</td>
+                        <td>{{result.correct_answer}}</td>
+                        <td>{{result.marks}}</td>
+                        <td>✔️</td>
+                    </tr>
+                    {% elif result.user_answer == None %}
+                    <tr class="yellow"><td>{{loop.index}}</td>
+                        <td class="ques">{{result.question}}</td>
+                        <td>{{result.user_answer}}</td>
+                        <td>{{result.correct_answer}}</td>
+                        <td>--Not answered--</td>
+                        <td>⚠️</td>
+                    </tr>
+                    {% else %}
+                    <tr class="red"><td>{{loop.index}}</td>
+                        <td class="ques">{{result.question}}</td>
+                        <td>{{result.user_answer}}</td>
+                        <td>{{result.correct_answer}}</td>
+                        <td>Wrong answer</td>
+                        <td>❌</td>
+                        </tr>
+                    {% endif %}      
+                
+            {% endfor %}
+            </tbody>
+        </table>
+        
+    </div>
+    <a href="{{ url_for('user_dashboard' ) }}" class="button" style="width: 100px;align-self: center;">Home</a>
+    </div>
+
+
+    
+{% endblock %}
