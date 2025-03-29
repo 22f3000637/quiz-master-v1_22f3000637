@@ -5,6 +5,22 @@
 {% endblock %}
 
 {% block content %}
+{% if user %}
+<div class="registration-form">
+    <div class="heading">
+        
+        <h3>User Update</h3>
+    </div>
+    <form action="{{ url_for('edit_user', user_id = user.id ) }}" method="post">
+        <div class="input-field"><label for="name">Full name : </label><input id="name" name="name" type="text" value="{{user.fullname}}" required></div>
+        <div class="input-field"><label for="qualification">Qualification : </label><input id="qualification" name="qualification" type="text" value="{{user.qualification}}" required></div>
+        <div class="input-field"><label for="dob">Date of Birth : </label><input id="dob" name="dob" type="date" value="{{user.dob}}" required></div>
+        <div class="input-field"><label for="email">E-mail : </label><input id="email" name="email" type="email" value="{{user.email}}" disabled style="cursor:not-allowed;"></div>
+        <div class="input-field"><label for="password">Password : </label><input id="password" name="password" type="password" minlength="8" maxlength="12" disabled style="cursor:not-allowed;"></div>
+        <div class="input-field"><input type="submit" value="Update" class="button">
+    </form>
+</div>
+{% else %}
 <div class="registration-form">
     <div class="heading">
         <h2>Welcome to Quiz Master</h2>
@@ -19,4 +35,7 @@
         <div class="input-field"><input type="submit" value="Register" class="button"><a href="{{ url_for('login' ) }}">Existing user?</a></div>
     </form>
 </div>
+{% endif %}
+
+
 {% endblock %}

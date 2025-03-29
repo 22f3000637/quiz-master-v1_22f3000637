@@ -1,6 +1,6 @@
 from flask import Flask
 from datetime import date
-
+from flask_cors import CORS
 
 
 app = Flask(__name__)
@@ -8,12 +8,13 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///quiz_master.sqlite3"
 app.config["SECRET_KEY"] = '81c34f7f2dcef68de4bc0c365df13f9f'
 
 from models import db, User, generate_password_hash
+from flask_restful import Api
 db.init_app(app)
-
-
+api = Api(app)
+CORS(app)
 
 with app.app_context():
-  from controllers import routes
+  from controllers import routes, api
 
   db.create_all()
   user = User.query.filter_by(is_admin = True).all()

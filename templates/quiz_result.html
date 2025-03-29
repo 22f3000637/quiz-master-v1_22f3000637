@@ -5,12 +5,11 @@
 {% endblock %}
 
 {% block content %}
+<div class="admin-container">
 {% include 'user_nav.html'   %}
-{% include 'flash.html'   %}
-    
     <div class="result-container">
     <div class="result-head">
-        <h1>🎉🎉Dear {{user}}, You have scored {{score.total_scored or 0}} out of {{total}}</h1>
+        <h1>🎉🎉Dear {{name}}, You have scored {{score.total_scored or 0}} out of {{total}}</h1>
     </div>
     <div class="result">
         <table >
@@ -29,24 +28,24 @@
                     {% if result.user_answer == result.correct_answer  %}
                     <tr class="green"><td>{{loop.index}}</td>
                         <td class="ques">{{result.question}}</td>
-                        <td>{{result.user_answer}}</td>
                         <td>{{result.correct_answer}}</td>
+                        <td>{{result.user_answer}}</td>
                         <td>{{result.marks}}</td>
                         <td>✔️</td>
                     </tr>
                     {% elif result.user_answer == None %}
                     <tr class="yellow"><td>{{loop.index}}</td>
                         <td class="ques">{{result.question}}</td>
-                        <td>{{result.user_answer}}</td>
                         <td>{{result.correct_answer}}</td>
+                        <td>{{result.user_answer}}</td>
                         <td>--Not answered--</td>
                         <td>⚠️</td>
-                    </tr>
+                    </tr>   
                     {% else %}
                     <tr class="red"><td>{{loop.index}}</td>
                         <td class="ques">{{result.question}}</td>
-                        <td>{{result.user_answer}}</td>
                         <td>{{result.correct_answer}}</td>
+                        <td>{{result.user_answer}}</td>
                         <td>Wrong answer</td>
                         <td>❌</td>
                         </tr>
@@ -59,6 +58,8 @@
     </div>
     <a href="{{ url_for('user_dashboard' ) }}" class="button" style="width: 100px;align-self: center;">Home</a>
     </div>
+
+</div>
 
 
     

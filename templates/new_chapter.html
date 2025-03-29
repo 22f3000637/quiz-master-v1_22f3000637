@@ -30,7 +30,8 @@
             <form action="/new_chapter/{{subject.id}}" method="post">
                 <div class="input-field"><label for="chapter-name">Name : </label><input id="chapter-name" name="chapter-name" type="text" required></div>
                 <div class="input-field"><label for="chapter-desc">Description : </label><textarea id="chapter-desc" name="chapter-desc" type="text" required></textarea></div>
-                <div class="input-field"><button type="submit" class="button">Save</button><button class="button"><a href="{{ url_for('admin_dashboard' ) }}">Cancel</a></button>
+                <div class="input-field"><button type="submit" class="button">Save</button><button class="button">
+                    <a href="{{ url_for('admin_dashboard' ) }}">Cancel</a></button>
                 </div>
             </form>
         </div>

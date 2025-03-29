@@ -6,6 +6,7 @@
 
 
 {% block content %}
+    {% include 'flash.html' %}
     {% if attempt is not none %}
     <div class="container">
         <div class="head">
@@ -69,16 +70,20 @@
             <div class="option">
             <form style="font-size: larger;" method="post" action="/quiz_question/{{quiz.id}}/{{question.id}}">
                 <div class="options-div">
-                    <input type="radio" name="option" id="option_1" value="{{question.option_1}}"><label>{{question.option_1}}</label>
+                    <input type="radio" name="option" id="option_1" value="{{question.option_1}}">
+                    <label for="option_1">{{question.option_1}}</label>
                 </div>
                 <div class="options-div">
-                    <input type="radio" name="option" id="option_2"  value="{{question.option_2}}"><label>{{question.option_2}}</label>
+                    <input type="radio" name="option" id="option_2"  value="{{question.option_2}}">
+                    <label for="option_2">{{question.option_2}}</label>
                  </div>
                 <div class="options-div">
-                    <input type="radio" name="option" id="option_3"  value="{{question.option_3}}"><label>{{question.option_3}}</label>
+                    <input type="radio" name="option" id="option_3"  value="{{question.option_3}}">
+                    <label for="option_3">{{question.option_3}}</label>
                 </div>
                 <div class="options-div">
-                    <input type="radio" name="option" id="option_4"  value="{{question.option_4}}"><label>{{question.option_4}}</label>
+                    <input type="radio" name="option" id="option_4"  value="{{question.option_4}}">
+                    <label for="option_4">{{question.option_4}}</label>
                 </div>
             </div>
             <div class="btn">
@@ -114,10 +119,11 @@
             }else{
                 document.getElementById('timer').style.color = 'limegreen';
             }
+            let hours = Math.floor(timeLeft/ (1000 * 60 * 60 ) % 24).toString().padStart(2,'0')
             let minutes = Math.floor(timeLeft / (1000 * 60) % 60).toString().padStart(2, '0');
             let seconds = Math.floor((timeLeft / 1000) % 60).toString().padStart(2, '0');
             
-            document.getElementById('timer').innerHTML = minutes +":" + seconds;
+            document.getElementById('timer').innerHTML = hours + ":" + minutes +":" + seconds;
 
         }
         let timerInterval = setInterval(updateTime, 1000)

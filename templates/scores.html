@@ -7,14 +7,13 @@
 {% block content %}
 <div class="admin-container">
     {% include 'user_nav.html'   %}
-    {% include 'flash.html' %}
     <div class="score-detail">
         <h2>Quiz Scores</h2>
         {% if scores %}
         <table>
             <thead>
                 <tr>
-                    <th>Id</th>
+                    <th>Quiz Id</th>
                     <th>No. of Questions</th>
                     <th>Date</th>
                     <th>Scores</th>
@@ -40,8 +39,9 @@
                                 
                                 {% endfor %}
                             {% endif %}
-                            <td>{{score.total_scored}} /{{total_marks.value}}</td>
                         {% endfor %}
+                        <td>{{score.total_scored}} /{{total_marks.value}}</td>
+
                     </tr>
                 {% endfor %}
             </tbody>

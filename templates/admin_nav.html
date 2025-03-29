@@ -1,5 +1,6 @@
 <nav>    
     <div class="navigation">
+        {% include 'flash.html' %}
         <ul>
             <li><a  href="{{ url_for('admin_dashboard' ) }}">Home</a></li>
             <li><a  href="{{ url_for('quiz_dashboard' ) }}">Quiz</a></li>

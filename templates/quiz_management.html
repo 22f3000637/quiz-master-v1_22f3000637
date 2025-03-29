@@ -8,7 +8,6 @@
 {% block content %}
 <div class="admin-container">
     {% include 'admin_nav.html'   %}
-    {% include 'flash.html'   %}
         <div class="quiz-list">
             {% set quiz_count = namespace(value=0) %}
             {% for quiz in quizes %}
@@ -36,13 +35,17 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {% set ques_count = namespace(value=0) %}
                     {% if chapter.questions %}
                         {% for question in chapter.questions %}
+                        {% if quiz.id == question.quiz_id %}
+                        {% set ques_count.value = ques_count.value + 1 %}
                         <tr>
-                            <td>{{loop.index    }}</td>
+                            <td>{{ques_count.value}}</td>
                             <td>{{question.question_title | title}}</td>
                             <td> <a href="/update_question/{{question.id}}">Edit</a> / <a href="/delete_question/{{question.id}}">Delete</a></td>
                         </tr>
+                        {% endif %}
                         {% endfor %}
                     {% else %}
                     <tr><td colspan="3" style="padding: 10px; border-bottom:2px solid var(--accent-color) ;">No questions added</td></tr>
