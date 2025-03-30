@@ -389,7 +389,7 @@ select {
     }
 }
 
-.quiz-detail,.score-detail, .user-container {
+.quiz-detail,.score-detail{
     display: grid;
     place-items: center;
     place-content: center;
@@ -398,6 +398,7 @@ select {
     border: 5px solid var(--accent-color);
     border-radius: 20px;
     padding: 3em;
+    width: 1000px;
     div {
         width: 100%;
         font-size: 1.5rem;
@@ -447,6 +448,7 @@ select {
         
     }
 }
+
 .container{
     position: relative;
     width: 90%;
@@ -628,88 +630,6 @@ select {
 .result-head::-webkit-scrollbar{
     width:2px;
 }
-.user-container {
-    position: absolute;
-    top:14%;
-    min-height: 80vh;
-    padding-top: 0;
-    table{
-        margin-bottom:13em;
-        th {
-            padding: 0.5em;
-            font-size: 1.5rem;
-            border: 2px solid var(--box-shadow);
-        }
-        td{
-            font-size: 1.2rem;
-            border-bottom: none;
-        }
-
-    }
-      
-}
-.subject-section{
-    margin-top: 20px;
-    border:2px solid var(--box-shadow);
-    padding: 1em 1.5em;
-    width: 1200px;
-    border-radius: 10px;
-    h2{
-        width: fit-content;
-        margin-top: 10px;
-    }
-    h2:first-child{
-        display: inline;
-        
-    }
-    h3{
-        display: inline-block;
-        font-size: 1.2rem;
-    }
-}
-.user-section{
-    border: 2px solid var(--accent-color);
-    border-radius: 10px;
-    margin: 20px auto;
-    min-width: 900px;
-    min-height: 280px;
-    text-align: center;
-    padding: 10px;
-    .home{
-        position: relative;
-        display: block;
-        width: 180px;
-        justify-self: center;
-        border-radius: 50px;
-    }
-    table{
-        padding: 10px;
-        width:100%;
-        margin: 10px auto;
-        border-radius: 20px;
-        border-spacing: 0px;
-        th,td{
-            padding: 10px;
-            text-align: center;
-            border:none;
-        }
-        th,td{
-            border-bottom:3px solid var(--accent-color) ;
-        }
-        
-    tr th, td{
-        border-right: 2px solid var(--accent-color);
-        a{
-            display: inline-block;
-            padding: 5px;
-            margin: 2px;
-        }
-    }
-    td:nth-child(6), th:nth-child(6){
-        border-right:none;
-    }
-    }
-}
 
 .index{
     video {
@@ -737,9 +657,152 @@ select {
             position: relative;
             display: inline-block;
             padding: 12px 100px;
-            border-radius: 50px;
-            
+            border-radius: 50px;            
         }
     }
     
 }
+
+.user-container{
+    width: 100%;
+    padding-top: 3em;
+    position: relative;
+    text-align: center;
+    table{
+        border: 3px solid var(--box-shadow);
+        border-collapse: collapse;
+        tr th, tr td{
+            padding:0.7em;
+            border: 3px solid var(--box-shadow);
+            text-align: center;
+        }
+        td a{
+            display: inline-block;
+            width: 80px;
+            padding: 0.5em 0.3em;
+            margin: 0.1em;
+        }
+    }
+    a{
+        display: block;
+        width: 120px;
+        border-radius:50px;
+        margin-inline:auto;
+    }
+}
+
+.home{
+    display: block;  
+    width: 180px;
+    justify-self: center;
+    border-radius: 50px;
+}
+.search-container .subject-section::-webkit-scrollbar,
+.search-container .user-section::-webkit-scrollbar{
+    display: none;
+}
+.all-quiz::-webkit-scrollbar{
+    width: 8px;
+    
+}
+.all-quiz::-webkit-scrollbar-track{
+    background: var(--background);    
+}
+.all-quiz::-webkit-scrollbar-thumb{
+    background-color: #999;
+    border-radius: 20px;    
+}
+.search-container{
+    margin-top: 4em;
+    height: 500px;
+    width: 90%;
+    margin-inline: auto;
+    max-width: 900px;
+    margin-left: 220px;
+        .all-quiz, .subject-section{
+        margin-inline: auto;
+        height: 100%;
+        width: 100%;
+        overflow-y: scroll;
+    }
+    .subject-section{
+        padding: 1em;
+        padding-top: 2em;
+        border:2px solid var(--box-shadow);
+        border-radius: 10px;
+        h2{
+            width: fit-content;
+            margin-top: 15px;
+        }
+        h2:first-child{
+            display: inline;   
+        }
+        h3{
+            display: inline-block;
+            font-size: 1.5rem;
+        }
+    }
+    .all-quiz{
+        .quiz-container + .quiz-container{
+            margin-top: 3em;
+        }
+        .quiz-container{
+            margin-top: 1em;
+            margin-right: 1em;
+            border: 3px solid var(--box-shadow);
+            .quiz{
+                border: 2px solid var(--box-shadow);
+                .header{
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding:0.5em 1em;
+                    border: 3px solid var(--box-shadow);
+                }
+                table{
+                    width: 100%;
+                    height: 250px;
+                    min-height: fit-content;
+                    border-collapse: collapse;
+                }
+                table thead tr th,
+                tr td{
+                    padding: 0.5em;
+                    border: 5px solid var(--box-shadow);
+                    text-align: center;
+                }
+                tr th{
+                    font-size: 1.1rem;
+                }
+                tr td:nth-child(1){
+                    text-align: left;
+                }
+            }
+        }
+    }
+    .user-section{
+        width: 110%;
+        padding-top: 3em;
+        position: relative;
+        text-align: center;
+        table{
+            border: 3px solid var(--box-shadow);
+            border-collapse: collapse;
+            tr th, tr td{
+                padding:0.7em;
+                border: 3px solid var(--box-shadow);
+                text-align: center;
+            }
+            td a{
+                display: inline-block;
+                width: 80px;
+                padding: 0.5em 0.3em;
+                margin: 0.1em;
+            }
+        }
+        .home{
+            margin-top: 6em;
+        }
+    }
+}
+

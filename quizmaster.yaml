@@ -1,0 +1,408 @@
+openapi: 3.0.0
+info:
+  title: QuizMaster API
+  description: QuizMaster is an interactive quiz application designed for users to create, participate in, and manage quizzes.
+  version: 1.0.0
+
+servers:
+  - url: http://127.0.0.1:5000
+
+paths:
+  /api/login:
+    post:
+      summary: User Login
+      description: User login with email and password 
+      tags: 
+        - login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Login"
+      responses:
+        200:
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+        400:
+          description: Bad Request - Missing email or password
+        401:
+          description: Unauthorized - Incorrect credentials
+        404:
+          description: User Not Found
+
+  /api/register:
+    post:
+      summary: User Registration
+      description: Register a new user
+      tags: 
+        - register
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Register"
+      responses:
+        201:
+          description: User successfully registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegisterResponse"
+        400:
+          description: Bad Request - Missing required fields
+        409:
+          description: Conflict - User already exists
+  /api/subjects:
+    get:
+      summary:  Details of all subjects 
+      description:  Get details of all subjects in database 
+      tags: 
+        - subject
+      responses:
+        200:
+          description:  Subjects retrived succesfully
+          content:
+            application/json: 
+              schema: 
+                type: array 
+                items:
+                  $ref: "#/components/schemas/Subjects"
+        404:
+          description:  No subjects found 
+    post: 
+      summary:  Creates new subject.
+      description: Add a new subject in the database. 
+      tags: 
+        - subject 
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSubject"
+      responses:
+        201:
+          description:  New subject created successfully
+          content:
+            application/json: 
+              schema: 
+                $ref: "#/components/schemas/CreateSubject"
+        400:
+          description: Bad request - Missing required fields
+              
+  /api/subjects/{subject_id}:
+    get:
+      summary: Get a Single Subject
+      description: Retrieve details of a specific subject by ID.
+      tags: 
+        - subject
+      parameters:
+        - name: subject_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the subject to retrieve.
+      responses:
+        200:
+          description: Subject retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Subjects"
+        404:
+          description: Subject not found
+    put:
+      summary:  Update a subject.
+      description:  Update a subject in the database. 
+      tags: 
+        - subject
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSubject" 
+      parameters:
+        - name: subject_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the subject to retrieve. 
+      responses:
+        200:
+          description: Subject updated successfully
+          content:
+              application/json: 
+                schema: 
+                  $ref: "#/components/schemas/CreateSubject"
+        400:
+          description: Bad request-Missing fields
+        404:
+          description: Subject not found  
+    delete: 
+      summary:  Delete subject
+      description:  Delete a subject in the database. 
+      tags: 
+        - subject 
+      parameters: 
+        - name: subject_id
+          in: path
+          required: true
+          schema: 
+            type: integer 
+          description:  The ID of the subject to delete 
+      responses:
+        200:
+          description:  Subject deleted successfully
+        404:
+          description:  Subject not found 
+  /api/chapters:
+    get:
+      summary:  Get all chapters
+      description:  Get all chapters in the database
+      tags: 
+        - chapter 
+      responses:
+        200:
+          description:  All chapters retrieved successfully 
+          content:
+           application/json: 
+              schema:
+                type: array 
+                items:
+                  $ref: "#/components/schemas/Subjects" 
+        404:
+          description:  No chapters found 
+  /api/chapters/{subject_id}: 
+    get:
+      summary:  Get list of chapters
+      description:  Get list of chapters for a particular subject.
+      tags: 
+        - chapter
+      parameters: 
+        - name: subject_id
+          in: path
+          required:  true 
+          schema: 
+            type: integer 
+          description:  The ID of the subject which the chapters needed 
+      responses:
+        200:
+          description:   Successfully retrived chapters for the given subject 
+          content:
+            application/json:
+              schema: 
+                type: array 
+                items: 
+                  $ref:  "#/components/schemas/Subjects"
+        404:
+          description:  Subject not found
+      
+    post: 
+      summary:  Create chapter
+      description:  Create a new chapter for a particular subject. 
+      tags: 
+        - chapter 
+      parameters: 
+        - name: subject_id
+          in: path
+          required:  true 
+          schema: 
+            type: integer 
+          description:  The ID of the subject which the chapter to be added.  
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSubject'
+      responses:
+        201:
+          description:  Chapter successfully created
+        400:
+          description:  Bad request - missing fields
+        404:
+          description:  Subject not found 
+        409:
+          description: Chapter already exists 
+  /api/chapters/{subject_id}/{chapter_id}:
+    get:
+      summary:  Get chapter
+      description:  Return a chapter for a particular subject
+      tags: 
+        - chapter 
+      parameters: 
+        - name: subject_id
+          in: path
+          required: true
+          schema:
+            type: integer 
+          description: The subject ID of the chapter needs to get
+        - name: chapter_id
+          in: path
+          required: true
+          schema: 
+            type: integer 
+          description:  The ID of the chapter to get 
+      responses:
+        200:
+          description:  Chapter retrived successfully
+        400:
+          description:  Bad request - missing fields  
+        404:  
+          description:  Subject or  Chapter not found 
+    put:
+      summary:  Update chapter
+      description:  Update a chapter on a particular subject
+      tags: 
+        - chapter 
+      parameters: 
+        - name: subject_id
+          in: path
+          required: true
+          schema:
+            type: integer 
+          description: The subject ID of the chapter needs to update
+        - name: chapter_id
+          in: path
+          required: true
+          schema: 
+            type: integer 
+          description:  The ID of the chapter to be updated 
+      requestBody:
+        required: true
+        content:
+          application/json: 
+            schema: 
+              $ref: "#/components/schemas/CreateSubject"
+      responses:
+        200:
+          description:  Chapter updated successfully
+        400:
+          description:  Bad request - missing fields  
+        404:  
+          description:  Subject or  Chapter not found 
+    delete: 
+      summary:  Delete chapter
+      description:  Delete a chapter on a particular subject
+      tags: 
+        - chapter 
+      parameters: 
+        - name: subject_id
+          in: path
+          required: true
+          schema:
+            type: integer 
+          description: The subject ID of the chapter needs to delete
+        - name: chapter_id
+          in: path
+          required: true
+          schema: 
+            type: integer 
+          description:  The ID of the chapter to be deleted 
+      responses:
+        200:
+          description:  Chapter deleted successfully
+        400:
+          description:  Bad request - missing fields  
+        404:  
+          description:  Subject or  Chapter not found 
+components:
+  schemas:
+    Login:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: "username@gmail.com"
+        password:
+          type: string
+          format: password
+          example: "Strongpassword@123"
+
+    LoginResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Login Successful"
+
+    Register:
+      type: object
+      required:
+        - name
+        - qualification
+        - dob
+        - email
+        - password
+      properties:
+        name:
+          type: string
+          example: "John Doe"
+        qualification:
+          type: string
+          example: "Bachelor's Degree"
+        dob:
+          type: string
+          format: date
+          example: "1990-05-15"
+        email:
+          type: string
+          format: email
+          example: "john@example.com"
+        password:
+          type: string
+          format: password
+          example: "SecurePass123"
+
+    RegisterResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "User created successfully"
+    Subjects: 
+      type: object
+      properties: 
+        id: 
+          type: integer
+          example: 1
+        name: 
+          type: string
+          example: "Python" 
+        description:
+          type: string
+          example: "Related to python"
+    CreateSubject:
+      type: object
+      required:
+        - name
+        - description
+      properties:
+        name:
+          type: string
+          example: "Mathematics"
+        description:
+          type: string
+          example: "Study of numbers, equations, and shapes."
+
+tags:
+  - name: login  
+    description: user login
+  - name: register
+    description: user registration  
+  - name: subject 
+    description: about subjects 
+  - name: chapter 
+    description:  about chapters

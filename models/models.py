@@ -54,8 +54,10 @@ class Question(db.Model):
   option_4 = db.Column(db.String(120), nullable=False)
   correct_answer = db.Column(db.String(120), nullable=False)
   marks = db.Column(db.Integer(), nullable = False)
-  chapter_id = db.Column(db.Integer, db.ForeignKey('chapter.id'), nullable = False)
-  quiz_id = db.Column(db.Integer, db.ForeignKey('quiz.id'), nullable = False)
+  chapter_id = db.Column(db.Integer, db.ForeignKey('chapter.id', ondelete='CASCADE'), nullable = False)
+  quiz_id = db.Column(db.Integer, db.ForeignKey('quiz.id', ondelete='CASCADE'), nullable = False)
+  attempts = db.relationship('Userattempt', backref='question', cascade="all, delete-orphan", lazy=True) 
+  
 
 class Scores(db.Model):
   id = db.Column(db.Integer, primary_key=True, nullable=False)

@@ -5,11 +5,11 @@
 {% endblock %}
 
 {% block content %}
-<div class="search-container">
 
+<div class="search-container">
+    <h1>Search results</h1>
     {% if admin %}
     {% include 'admin_nav.html'   %}
-    <h1>Search results</h1>
         {% if category == "Subject" %}
         <div class="subject-section">
             {% if results %}
@@ -30,64 +30,49 @@
             {% endif %}
 
             {% elif category == "Quiz" %}
-            <div class="quiz-container">
-            {% for res in results %}
-                {% if res.quizes %}
-                    <h2>{{ res.name }}</h2>
-                    {% for quiz in res.quizes %}
-                        <h3>Quiz Date: {{ quiz.date_of_quiz }}</h3>
-                        <h3>Duration: {{ quiz.time_duration }} minutes</h3>
-
-                        {% if quiz.questions %}
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Question</th>
-                                        <th>Correct Answer</th>
-                                        <th>Marks</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for ques in quiz.questions %}
-                                        <tr>
-                                            <td>{{ ques.question }}</td>
-                                            <td>{{ ques.correct_answer }}</td>
-                                            <td>{{ ques.marks }}</td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        {% else %}
-                            <p><strong>No questions added.</strong></p>
-                        {% endif %}
-                    {% endfor %}
-                {% elif res.quizzes | length < 0 %}
-                    <h1>No quizzes found</h1>
-                {% endif %}
-            {% endfor %}
-        </div>
-        <!-- {% elif category == "Quiz" %} -Quizzes-
-        {% for res in results %}
-            {% if res.quizes %}
-                    {{res.name}}<br>
-                    {% for quiz in res.quizes %}
-                    {{quiz.date_of_quiz}}<br>
-                    {{quiz.time_duration}} minutes<br>
-                        {% if quiz.questions %}
-                            {% for ques in quiz.questions %}
-                                {{ques.question}}
-                                {{ques.correct_answer}}
-                                {{ques.marks}}<br>
-                            {% endfor %}
-                        {% else %}
-                            <h1>No questions Added</h1>
-                        {% endif %}
-                    {% endfor %}
-            {% else %}
-            <h1>No quizzes found</h1>
-            {% endif %}
-        {% endfor %} -->
-
+            <div class="all-quiz">
+                {% for res in results %}
+                <div class="quiz-container">
+                    {% if res.quizes %}
+                        {% for quiz in res.quizes %}
+                        <div class="quiz">
+                            <div class="header">
+                                <h2>{{ res.name }}</h2>
+                                <div class="date-duration">
+                                    <h3>Quiz Date: {{ quiz.date_of_quiz }}</h3>
+                                    <h3>Duration: {{ quiz.time_duration }} (HH:MM)</h3>
+                                </div>
+                            </div>
+                                {% if quiz.questions %}
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Question</th>
+                                                <th>Correct Answer</th>
+                                                <th>Marks</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for ques in quiz.questions %}
+                                                <tr>
+                                                    <td>{{ ques.question }}</td>
+                                                    <td>{{ ques.correct_answer }}</td>
+                                                    <td>{{ ques.marks }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                {% else %}
+                                    <p><strong>No questions added.</strong></p>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% elif res.quizzes | length < 0 %}
+                        <h1>No quizzes found</h1>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
         {% else %}
             {% if category == "User" %}
             <div class="user-section">
@@ -108,9 +93,9 @@
                             <td>{{user.email}}</td>
                             <td>{{user.qualification}}</td>
                             <td>{{user.dob}}</td>
-                            <td>
-                                <a href="{{ url_for('edit_user' , user_id = user.id)}}" class="button">Edit</a
-                                    ><a href="{{ url_for('delete_user', user_id = user.id ) }}" class="button">Delete</a>
+                            <td >
+                                <a href="{{ url_for('edit_user' , user_id = user.id)}}" class="button">Edit</a>
+                                <a href="{{ url_for('delete_user', user_id = user.id ) }}" class="button">Delete</a>
                             </td>
                         </tr>
                         {% endfor %}
@@ -125,53 +110,74 @@
     {% else %}<!--User else-->
         {% if results %}
             {% if category == "Score" %}
+            <div class="score-detail">
             <table>
                 <thead>
                     <tr>
                         <th>Id</th>
+                        <th>Quiz date</th>
+                        <th>Duration</th>
                         <th>No. of Questions</th>
-                        <th>Date</th>
+                        <th>Last attempt</th>
                         <th>Scores</th>
+                        <th>Chapter</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for score in scores %}
-                        <tr>
-                            <td>{{score.quiz_id}}</td>
-                            {% for quiz in quizzes %}
-                                {% if quiz.id == score.quiz_id %}
-                                <td>{{quiz.questions | length}}</td>
-                                {% endif %}
-                            {% endfor %}
-                            
-                            <td>{{score.time_stamp_of_attempt.strftime("%d/%m/%Y") }}</td>
-                            {% set total_marks = namespace(value = 0) %}
-                            {% for quiz in quizzes %}
-                                {% if quiz.id == score.quiz_id %}
-                                    
-                                    {% for ques in quiz.questions %}
-                                    {% set total_marks.value = total_marks.value + ques.marks %}
-                                    
-                                    {% endfor %}
-                                {% endif %}
-                            {% endfor %}
-                            <td>{{score.total_scored}} /{{total_marks.value}}</td>
-                        </tr>
-                    {% endfor %}
+                    {% for score, quiz, chapter in results %}
+                    <tr>
+                        <td>{{ score.quiz_id }}</td>
+                        <td>{{ quiz.date_of_quiz }}</td>
+                        <td>{{ quiz.time_duration }} (HH:MM)</td>
+                        <td>{{ quiz.questions | length }}</td>
+                        <td>{{ score.time_stamp_of_attempt.strftime('%d-%m-%Y %H:%m %p')}}</td>
+                        
+                        {% set total_marks = namespace(value=0) %}
+                        {% for ques in quiz.questions %}
+                            {% set total_marks.value = total_marks.value + ques.marks %}
+                        {% endfor %}
+                        
+                        <td>{{ score.total_scored }} / {{ total_marks.value }}</td>
+                        <td>{{ chapter.name }}</td> 
+                    </tr>
+                {% endfor %}
                 </tbody>
             </table>
-            {% else %}
-            {% for res in results %}
-                {{res.id}}
-                {{res.date_of_quiz}}
-                {{res.time_duration}}
-                {{res.questions | length}}
-                {{res.chapter_id}}
-            {% endfor %}
+            </div>
+            {% elif category == "Date" %}<!--Date search-->
+            <div class="quiz-list" style="position: absolute; ">
+                <table style="min-width: 1000px; margin: auto;">
+                    <thead>
+                        <tr>
+                            <th colspan="5"><h2>Quiz details</h2></th>
+                        </tr>
+                        <tr>
+                            <th>Quiz Id</th>
+                            <th>Date of quiz</th>
+                            <th>Duration (HH:MM)</th>
+                            <th>No. of questions</th>
+                            <th>Chapter Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for res, chapter_name in results %}
+                        <tr>
+                            <td>{{res.id}}</td>
+                            <td>{{res.date_of_quiz}}</td>
+                            <td>{{res.time_duration}}</td>
+                            <td>{{res.questions | length}}</td>
+                            <td>{{chapter_name}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
             {% endif %}
         {% else %}
             <h1>No results found</h1>
         {% endif %}
+        <a href="/user_dashboard" class=" button">Home</a>
     {% endif %}
+   
 </div>
 {% endblock %}

@@ -342,24 +342,30 @@ def start_quiz(quiz_id):
     email = session.get('email')
     user = User.query.filter_by(email=email).first()
     quiz = Quiz.query.filter_by(id=quiz_id).first()
-
+    score = Scores.query.filter_by(user_id = user.id, quiz_id = quiz_id).first()
+    attempts = Userattempt.query.filter_by(user_id = user.id , quiz_id = quiz_id).all()
     if not user or not quiz:
         flash("Invalid quiz or user!", "error")
         return redirect(url_for("user_dashboard"))
     
-    # if datetime.today().date() < quiz.date_of_quiz:
-    #     flash("Quiz is not yet available!", "error")
-    #     return redirect(url_for("user_dashboard"))
+    if datetime.today().date() < quiz.date_of_quiz:
+        flash("Quiz is not yet available!", "error")
+        return redirect(url_for("user_dashboard"))
     if quiz.questions == []:
         flash("Questions not added yet", "error")
         return redirect(url_for("user_dashboard"))
-    
+    if score:
+        score.total_scored = 0
+        score.time_stamp_of_attempt = datetime.now()
+        
+    if attempts:
+        for attempt in attempts:
+            db.session.delete(attempt)
+    db.session.commit()
+
     time_duration = str(quiz.time_duration).strip().split(":")
-    print(time_duration)
     hours = int(time_duration[0])
-    print(hours)
     minutes = int(time_duration[1])
-    print(minutes)
         
     first_question = quiz.questions[0]
     if hours:
@@ -387,10 +393,6 @@ def quiz_question(quiz_id, question_id):
     attempt = Userattempt.query.filter_by(user_id=user.id, quiz_id=quiz_id, question_id=question.id).one_or_none()
     score = Scores.query.filter_by(user_id=user.id, quiz_id=quiz_id).first()
     
-    if not attempt and score:
-        score.total_scored = 0
-        score.time_stamp_of_attempt = datetime.now()
-        db.session.commit()
     
     if request.method == 'POST':
         selected_answer = request.form.get('option', None)
@@ -400,6 +402,7 @@ def quiz_question(quiz_id, question_id):
         if not score:
             score = Scores(user_id=user.id, quiz_id=quiz_id, total_scored=0, time_stamp_of_attempt=datetime.now())
             db.session.add(score)
+            db.session.commit()
 
         if selected_answer:
             if not attempt:
@@ -416,11 +419,11 @@ def quiz_question(quiz_id, question_id):
                     score.total_scored += question.marks
                 elif previous_correct and not new_correct:
                     score.total_scored -= question.marks
-        if selected_answer is None:
-            if not attempt:
-                attempt = Userattempt(user_id=user.id, quiz_id=quiz_id, question_id=question.id, user_answer=selected_answer)
-            attempt.user_answer = selected_answer
-            db.session.add(attempt)
+        # if selected_answer is None:
+        #     if not attempt:
+        #         attempt = Userattempt(user_id=user.id, quiz_id=quiz_id, question_id=question.id, user_answer=selected_answer)
+        #     attempt.user_answer = selected_answer
+        #     db.session.add(attempt)
         db.session.commit()
 
         if action == "submit":
@@ -430,6 +433,8 @@ def quiz_question(quiz_id, question_id):
             return redirect(url_for("quiz_result", quiz_id=quiz_id))
         
         if action == "clear":
+            if attempt and attempt.user_answer == question.correct_answer:
+                score.total_scored -= question.marks
             db.session.delete(attempt)
             db.session.commit()
             flash('Response cleared', 'error')
@@ -472,7 +477,8 @@ def scores():
     user = User.query.filter_by(email = email).first()
     scores = Scores.query.filter_by(user_id = user.id).all()
     quizzes = Quiz.query.all()
-    return render_template('scores.html', scores = scores, quizzes = quizzes, name = session.get('name'))
+    chapters = Chapter.query.all()
+    return render_template('scores.html', scores = scores, quizzes = quizzes, name = session.get('name'), chapters = chapters)
 
 
 #    Admin summary
@@ -481,17 +487,22 @@ def scores():
 def admin_summary(): 
     subject_scores = {}
     subject_colors = {}
+    
     subjects = Subject.query.all()
     for subject in subjects:
+        highest_score = 0 
         for chapter in subject.chapters:
             for quiz in chapter.quizes:
                 scores = Scores.query.filter_by(quiz_id=quiz.id).all()
-                for score in scores:
-                    if subject.name not in subject_scores or score.total_scored > subject_scores[subject.name]:
-                        subject_scores[subject.name] = score.total_scored
-                        subject_colors[subject.name] = (random.random(), random.random(), random.random())
-    # Bar Graph
-    plt.figure()
+                for score in scores:  
+                    if score.total_scored > highest_score:
+                        highest_score = score.total_scored
+
+        if highest_score  > 0: 
+            subject_scores[subject.name] = highest_score 
+            subject_colors[subject.name] = (random.random(), random.random(), random.random())
+
+    plt.figure(figsize=(8, 5))
     subject_names = list(subject_scores.keys())
     scores = list(subject_scores.values())
     colors = [subject_colors[name] for name in subject_names]
@@ -499,11 +510,14 @@ def admin_summary():
     bar_container = plt.bar(subject_names, scores, color=colors)
     plt.bar_label(bar_container)
     plt.xlabel('Subjects', fontweight='bold')
-    plt.ylabel('Scores', fontweight='bold')
-    plt.title("Highest Scores of Each Subject", pad=30, fontweight='bold')
+    plt.ylabel('Top Score', fontweight='bold')
+    plt.title("Highest Scores of Each Subject", pad=20, fontweight='bold')
+    plt.xticks(rotation=45, ha='right', fontweight='bold')
+    plt.tight_layout()
     plt.savefig('static/bar1.png')
     plt.clf()
-    # Pie Graph
+
+    # **Pie Chart: Attempts per Subject**
     query = (
         db.session.query(Subject.name, db.func.count(Scores.id))
         .join(Chapter, Subject.id == Chapter.subject_id)
@@ -517,14 +531,13 @@ def admin_summary():
     counts = [count for _, count in query]
     colors = [subject_colors.get(name, (random.random(), random.random(), random.random())) for name in subjects]
 
-    plt.figure()
-    plt.pie(counts, colors=colors, labels=subjects, autopct='%1.1f%%', labeldistance=1)
-    plt.title("Attempts of Each Subject", fontweight='bold')
+    plt.figure(figsize=(7, 7))
+    plt.pie(counts, colors=colors, labels=subjects, autopct='%1.1f%%', startangle=0, textprops={'fontweight': 'bold', 'fontsize': 12})
+    plt.title("User Attempts per Subject", fontweight='bold', fontsize=13)
     plt.savefig('static/circle1.png')
     plt.clf()
 
-    return render_template('admin_summary.html', name = session.get('name'))
-
+    return render_template('admin_summary.html', name=session.get('name'))
 
 
 #all users
@@ -630,9 +643,22 @@ def searched():
             results = Chapter.query.filter(Chapter.name.like(word)).all()
     else:
         if category == "Score":
-            results = Scores.query.filter_by(user_id = user.id).filter(Scores.total_scored.like(word)).all()
+            word = int(request.args.get('query'))
+            results = (
+                db.session.query(Scores, Quiz, Chapter)
+                .join(Quiz, Quiz.id == Scores.quiz_id)
+                .join(Chapter, Chapter.id == Quiz.chapter_id)
+                .filter(Scores.user_id == user.id)
+                .filter(Scores.total_scored == word)
+                .all()
+            )
         if category == "Date":
-            results = Quiz.query.filter(Quiz.date_of_quiz.like(word)).all()
+            results = (
+                db.session.query(Quiz, Chapter.name)
+                .join(Chapter, Chapter.id == Quiz.chapter_id)
+                .filter(Quiz.date_of_quiz.like(word))
+                .all()
+            )
     return render_template('searched.html', results = results, admin = user.is_admin, category = category,name = session.get('name')) 
     
 

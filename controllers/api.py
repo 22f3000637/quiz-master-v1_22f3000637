@@ -7,8 +7,6 @@ from datetime import datetime
 
 
 
-
-
 # === Exceptions ===
 
 class CustomError(HTTPException):
@@ -85,7 +83,7 @@ class SubjectApi(Resource):
         subject = Subject(name = name, description =description)
         db.session.add(subject)
         db.session.commit()
-        return {"message": "Subject created successfully"}, 201
+        return {"message": "Subject created successfully"}, 200
 
     @marshal_with(subject_output)
     def put(self, subject_id = None):
@@ -122,18 +120,92 @@ chapter_output = {
 
 class ChapterApi(Resource):
     @marshal_with(chapter_output)
-    def get(self, chapter_id = None, subject_id = None ):
-        if chapter_id == None:
+    def get(self, chapter_id=None, subject_id=None):
+        if chapter_id is None and subject_id is None:
             chapters = Chapter.query.all()
             return chapters, 200
-        chapter = Chapter.query.filter_by(id = chapter_id).first()
-        if chapter:
+
+        if subject_id is not None and chapter_id is None:
+            subject = Subject.query.filter_by(id=subject_id).first()
+            if subject is None:
+                raise CustomError(status_code=404, error_msg=f"No subject found with ID {subject_id}")
+            return subject.chapters, 200 
+
+        if subject_id is not None and chapter_id is not None:
+            subject = Subject.query.filter_by(id=subject_id).first()
+            if subject is None:
+                raise CustomError(status_code=404, error_msg=f"No subject found with ID {subject_id}")
+
+            chapter = Chapter.query.filter_by(id=chapter_id, subject_id=subject_id).first()
+            if chapter is None:
+                raise CustomError(status_code=404, error_msg=f"Chapter ID {chapter_id} not found for subject ID {subject_id}")
+
             return chapter, 200
-        return CustomError(status_code=404, error_msg="Subject not found")
+        
+        raise CustomError(status_code=400, error_msg="Invalid request")
+
+    @marshal_with(chapter_output)
+    def post(self, subject_id):
+        name = request.json.get("name").lower()
+        description = request.json.get("description")
+        if not name or not description:
+            raise CustomError(status_code=400, error_msg="Both name and description needed!")
+        chapter = Chapter.query.filter_by(name = name).first()
+
+        if chapter:
+            raise CustomError(status_code=409, error_msg="Chapter already exists")
+        subject = Subject.query.filter_by(id = subject_id).first()
+
+        if not subject:
+            raise CustomError(status_code=404, error_msg="Subject not found")
+        chapter = Chapter(name = name, description = description, subject_id = subject_id)
+
+        db.session.add(chapter)
+        db.session.commit()
+        return subject.chapters, 201
     
+    @marshal_with(chapter_output)
+    def put(self, subject_id, chapter_id):
+        name = request.json.get("name").lower()
+        description = request.json.get("description")
 
+        if not subject_id or not chapter_id:
+            raise CustomError(status_code=400, error_msg="Both Subject id and Chapter id needed!")
+        
+        if not name or not description:
+            raise CustomError(status_code=400, error_msg="Both name and description needed!")
 
+        subject = Subject.query.filter_by(id = subject_id).first()
+        if not subject:
+            raise CustomError(status_code=404, error_msg="Subject not found")
+        chapter = Chapter.query.filter_by(id=chapter_id, subject_id=subject_id).first()
+        if not chapter:
+            raise CustomError(status_code=404, error_msg="Chapter not found!")
+        if chapter.name == name:
+            chapter.description = description
+            db.session.commit()
+            return chapter, 200
+        chapter.name = name
+        chapter.description = description
+        db.session.commit()
+        return chapter, 200
+    
+    def delete(self, subject_id, chapter_id):
+        subject = Subject.query.get(subject_id)
+        if not subject:
+            raise CustomError(status_code=404, error_msg="Subject not found!")
+
+        chapter = Chapter.query.filter_by(id=chapter_id, subject_id=subject_id).first()
+        if not chapter:
+            raise CustomError(status_code=404, error_msg="Chapter not found!")
+
+        db.session.delete(chapter)
+        db.session.commit()
+        return {"message": "Chapter deleted successfully"}, 200
+
+    
 # === resource add ===
 api.add_resource(LoginApi, "/api/login")
 api.add_resource(RegisterApi, "/api/register")
 api.add_resource(SubjectApi, "/api/subjects", "/api/subjects/<int:subject_id>")
+api.add_resource(ChapterApi, "/api/chapters", "/api/chapters/<int:subject_id>","/api/chapters/<int:subject_id>/<int:chapter_id>")

@@ -12,10 +12,10 @@
         <div class="heading">
             <h2>Update Quiz</h2>
         </div>
-        <form action="/update_quiz//{{quiz.id}}" method="post">
-            <div class="input-field"><label for="date">Date : </label><input id="date" name="date" type="date" value="{{quiz.date}}" required style="text-align: center;"></div>
-            <div class="input-field"><label for="duration">Duration : </label>
-                <input type="time" name="duration">
+        <form action="/update_quiz/{{quiz.id}}" method="post">
+            <div class="input-field"><label for="date">Date : </label><input id="date" name="date" type="date" value="{{quiz.date_of_quiz}}" required style="text-align: center;"></div>
+            <div class="input-field"><label for="duration">Duration (HH:MM): </label>
+                <input type="time" name="duration" style="text-align: center;" value="{{quiz.time_duration}}"> 
             </div>
             <div class="input-field"><input type="submit" class="button" value="Save" style="width:33%;">
                 <button class="button"><a href="{{ url_for('quiz_dashboard' ) }}">Cancel</a></button></div>
