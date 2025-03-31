@@ -8,6 +8,7 @@
 <div class="admin-container">
     {% include 'admin_nav.html'   %}    
     <div class="course-list">
+    {% if subjects %}
     {% for subject in subjects %}
         <table class="course">
             <thead>
@@ -59,5 +60,8 @@
     <div class="new-subject-icon">
         <a href="{{url_for('new_subject')}}" class="button">+Subject</a>
     </div>
+    {% else %}
+        <h1>No Subjects found</h1>
+    {% endif %}
 </div>
 {% endblock %}

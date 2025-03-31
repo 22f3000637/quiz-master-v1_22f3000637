@@ -94,7 +94,7 @@
         </form>
             <div class="question-number">
                 {% for question in quiz.questions %}
-                    <a href="/quiz_question/{{quiz.id}}/{{question.id-1}}">{{loop.index}}</a>
+                    <a href="/quiz_question/{{quiz.id}}/{{question.id}}">{{loop.index}}</a>
                 {% endfor %}
             </div>
         </div>

@@ -13,6 +13,7 @@
 <div class="admin-container">
     {% include 'user_nav.html'   %}
     <div class="quiz-list">
+        {% if quizes %}
         <table style="min-width: 1000px; margin: auto;">
             <thead>
                 <tr>
@@ -48,5 +49,8 @@
                
             </tbody>
         </table>
+        {% else %}
+        <h1>No Quizzes found</h1>
+        {% endif %}
     </div>
 {% endblock %}

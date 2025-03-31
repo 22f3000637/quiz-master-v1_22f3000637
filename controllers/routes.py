@@ -395,7 +395,7 @@ def quiz_question(quiz_id, question_id):
     
     
     if request.method == 'POST':
-        selected_answer = request.form.get('option', None)
+        selected_answer = request.form.get('option', default=None)
         action = request.form.get('action')
         correct_answer = question.correct_answer
 
@@ -404,7 +404,7 @@ def quiz_question(quiz_id, question_id):
             db.session.add(score)
             db.session.commit()
 
-        if selected_answer:
+        if selected_answer or selected_answer is None:
             if not attempt:
                 attempt = Userattempt(user_id=user.id, quiz_id=quiz_id, question_id=question.id, user_answer=selected_answer)
                 db.session.add(attempt)
@@ -475,11 +475,34 @@ def quiz_result(quiz_id):
 def scores():
     email = session.get('email')
     user = User.query.filter_by(email = email).first()
-    scores = Scores.query.filter_by(user_id = user.id).all()
-    quizzes = Quiz.query.all()
-    chapters = Chapter.query.all()
-    return render_template('scores.html', scores = scores, quizzes = quizzes, name = session.get('name'), chapters = chapters)
+    scores = Scores.query.filter_by(user_id=user.id).all()
+    quizzes = {quiz.id: quiz for quiz in Quiz.query.all()} 
+    chapters = {chapter.id: chapter.name for chapter in Chapter.query.all()}
+    results = []
+    for score in scores:
+        quiz = quizzes.get(score.quiz_id)
+        if quiz:
+            chapter_name = chapters.get(quiz.chapter_id, "Unknown") 
+            num_questions = len(quiz.questions)
+            total_marks = sum(q.marks for q in quiz.questions)  
 
+            attempted_questions_count = Userattempt.query.filter(
+                Userattempt.user_id == user.id,
+                Userattempt.quiz_id == score.quiz_id,
+                Userattempt.user_answer.isnot(None)
+            ).count()
+
+            results.append({
+                "quiz_id": score.quiz_id,
+                "chapter_name": chapter_name,
+                "num_questions": num_questions,
+                "attempted_questions": attempted_questions_count,
+                "date_attempted": score.time_stamp_of_attempt.strftime("%d/%m/%Y"),
+                "marks_scored": score.total_scored,
+                "total_marks": total_marks
+            })
+
+    return render_template('scores.html', results=results)
 
 #    Admin summary
 @admin_required
@@ -527,7 +550,7 @@ def admin_summary():
         .all()
     )
     
-    subjects = [name for name, _ in query]
+    subjects = [name[:8] for name, _ in query]
     counts = [count for _, count in query]
     colors = [subject_colors.get(name, (random.random(), random.random(), random.random())) for name in subjects]
 

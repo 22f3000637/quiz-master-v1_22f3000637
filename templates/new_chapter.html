@@ -15,7 +15,7 @@
                 <h2>Update Chapter</h2>
             </div>
             <form action="/chapter_update/{{chapter.id}}" method="post">
-                <div class="input-field"><label for="chapter-name">Name : </label><input id="chapter-name" name="chapter-name" type="text" value="{{chapter.name}}" required></div>
+                <div class="input-field"><label for="chapter-name">Name : </label><input id="chapter-name" name="chapter-name" type="text" maxlength="12" value="{{chapter.name}}" required></div>
                 <div class="input-field"><label for="chapter-desc">Description : </label><textarea id="chapter-desc" name="chapter-desc" type="text" required>{{chapter.description}}</textarea></div>
                 <div class="input-field"><button type="submit" class="button">Update</button>
                     <a href="{{ url_for('admin_dashboard' ) }}" class="button">Cancel</a>
@@ -28,7 +28,7 @@
                 <h2>{{subject.name}} Chapter</h2>
             </div>
             <form action="/new_chapter/{{subject.id}}" method="post">
-                <div class="input-field"><label for="chapter-name">Name : </label><input id="chapter-name" name="chapter-name" type="text" required></div>
+                <div class="input-field"><label for="chapter-name">Name : </label><input id="chapter-name" name="chapter-name" type="text" maxlength="12" required></div>
                 <div class="input-field"><label for="chapter-desc">Description : </label><textarea id="chapter-desc" name="chapter-desc" type="text" required></textarea></div>
                 <div class="input-field"><button type="submit" class="button">Save</button>
                     <a class="button" href="{{ url_for('admin_dashboard' ) }}">Cancel</a>

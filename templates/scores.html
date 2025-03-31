@@ -9,40 +9,30 @@
     {% include 'user_nav.html'   %}
     <div class="score-detail">
         <h2>Quiz Scores</h2>
-        {% if scores %}
+        {% if results %}
         <table>
             <thead>
                 <tr>
-                    <th>Id</th>
+                    <th>Quiz ID</th>
+                    <th>Chapter</th>
                     <th>No. of Questions</th>
+                    <th>Questions attended</th>
                     <th>Date</th>
-                    <th>Scores</th>
+                    <th>Marks Scored</th>
+                    <th>Total Marks</th>
                 </tr>
             </thead>
             <tbody>
-                {% for score in scores %}
-                    <tr>
-                        <td>{{score.quiz_id}}</td>
-                        {% for quiz in quizzes %}
-                            {% if quiz.id == score.quiz_id %}
-                            <td>{{quiz.questions | length}}</td>
-                            {% endif %}
-                        {% endfor %}
-                        
-                        <td>{{score.time_stamp_of_attempt.strftime("%d/%m/%Y") }}</td>
-                        {% set total_marks = namespace(value = 0) %}
-                        {% for quiz in quizzes %}
-                            {% if quiz.id == score.quiz_id %}
-                                
-                                {% for ques in quiz.questions %}
-                                {% set total_marks.value = total_marks.value + ques.marks %}
-                                
-                                {% endfor %}
-                            {% endif %}
-                        {% endfor %}
-                        <td>{{score.total_scored}} /{{total_marks.value}}</td>
-
-                    </tr>
+                {% for result in results %}
+                <tr>
+                    <td>{{ result.quiz_id }}</td>
+                    <td>{{ result.chapter_name }}</td>
+                    <td>{{ result.num_questions }}</td>
+                    <td>{{result.attempted_questions}}</td>
+                    <td>{{ result.date_attempted }}</td>
+                    <td>{{ result.marks_scored }}</td>
+                    <td>{{ result.total_marks }}</td>
+                </tr>
                 {% endfor %}
             </tbody>
         </table>

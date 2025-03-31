@@ -31,48 +31,55 @@
 
             {% elif category == "Quiz" %}
             <div class="all-quiz">
-                {% for res in results %}
-                <div class="quiz-container">
-                    {% if res.quizes %}
-                        {% for quiz in res.quizes %}
-                        <div class="quiz">
-                            <div class="header">
-                                <h2>{{ res.name }}</h2>
-                                <div class="date-duration">
-                                    <h3>Quiz Date: {{ quiz.date_of_quiz }}</h3>
-                                    <h3>Duration: {{ quiz.time_duration }} (HH:MM)</h3>
-                                </div>
+            {% if results %}
+            {% for res in results %}
+            <div class="quiz-container">
+                {% if res.quizes %}
+                    {% for quiz in res.quizes %}
+                    <div class="quiz">
+                        <div class="header">
+                            <h2>{{ res.name }}</h2>
+                            <div class="date-duration">
+                                <h3>Quiz Date: {{ quiz.date_of_quiz }}</h3>
+                                <h3>Duration: {{ quiz.time_duration }} (HH:MM)</h3>
                             </div>
-                                {% if quiz.questions %}
-                                    <table>
-                                        <thead>
+                        </div>
+                            {% if quiz.questions %}
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Question</th>
+                                            <th>Correct Answer</th>
+                                            <th>Marks</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for ques in quiz.questions %}
                                             <tr>
-                                                <th>Question</th>
-                                                <th>Correct Answer</th>
-                                                <th>Marks</th>
+                                                <td>{{ ques.question }}</td>
+                                                <td>{{ ques.correct_answer }}</td>
+                                                <td>{{ ques.marks }}</td>
                                             </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for ques in quiz.questions %}
-                                                <tr>
-                                                    <td>{{ ques.question }}</td>
-                                                    <td>{{ ques.correct_answer }}</td>
-                                                    <td>{{ ques.marks }}</td>
-                                                </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                {% else %}
-                                    <p><strong>No questions added.</strong></p>
-                                {% endif %}
-                            </div>
-                        {% endfor %}
-                    {% elif res.quizzes | length < 0 %}
-                        <h1>No quizzes found</h1>
-                    {% endif %}
-                </div>
-                {% endfor %}
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% else %}
+                                <p><strong>No questions added.</strong></p>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% elif res.quizzes | length < 0 %}
+                    <h1 >No quizzes found</h1>
+                {% endif %}
             </div>
+            {% endfor %}
+            {% else %}
+                <h1 style="text-align: center;">No results found</h1>
+            {% endif %}
+            </div>
+            
+                
+            
         {% else %}
             {% if category == "User" %}
             <div class="user-section">
